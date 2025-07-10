@@ -1,26 +1,35 @@
-import React, {FC, useEffect, useState} from 'react';
-import {CommonPageProps} from './types';
-import {Col, Row} from 'react-bootstrap';
-import {useParams} from 'react-router-dom';
-import {ContactDto} from 'src/types/dto/ContactDto';
-import {ContactCard} from 'src/components/ContactCard';
-import {Empty} from 'src/components/Empty';
+import { FC, useEffect } from 'react';
+import { Col, Row } from 'react-bootstrap';
+import { Navigate, useParams } from 'react-router-dom';
+import { ContactCard } from 'src/components/ContactCard';
+import { useAppDispatch, useAppSelector } from '../apps/redux/hooks';
+import { fetchContacts } from '../apps/redux/actions/contactsActions';
 
-
-export const ContactPage: FC<CommonPageProps> = ({
-  contactsState
-}) => {
-  const {contactId} = useParams<{ contactId: string }>();
-  const [contact, setContact] = useState<ContactDto>();
+export const ContactPage: FC = () => {
+  const { contactId } = useParams<{ contactId: string }>();
+  const dispatch = useAppDispatch();
+  const contacts = useAppSelector(state => state.contacts.items);
+  const contactById = (contactId: string | undefined) =>
+    contacts.find(contact => contact.id === contactId);
+  const contact = contactById(contactId);
+  const loading = useAppSelector(state => state.contacts.loading);
 
   useEffect(() => {
-    setContact(() => contactsState[0].find(({id}) => id === contactId));
-  }, [contactId]);
+    dispatch(fetchContacts());
+  }, [dispatch]);
+
+  if (loading) {
+    return <div>Загрузка...</div>;
+  }
+
+  if (!contact) {
+    return <Navigate to="/contact" replace />;
+  }
 
   return (
     <Row xxl={3}>
       <Col className={'mx-auto'}>
-        {contact ? <ContactCard contact={contact} /> : <Empty />}
+        <ContactCard contact={contact} />
       </Col>
     </Row>
   );

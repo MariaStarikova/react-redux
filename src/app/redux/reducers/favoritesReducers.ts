@@ -4,10 +4,7 @@ import {
   TOGGLE_FAVORITE,
   type FavoritesActions
 } from '../actions/favoritesActions';
-
-export interface FavoritesState {
-  contactIds: string[];
-}
+import { FavoritesState } from '../favorites/slice';
 
 const initialState: FavoritesState = {
   contactIds: [

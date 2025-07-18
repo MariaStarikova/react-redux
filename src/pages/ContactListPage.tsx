@@ -1,19 +1,23 @@
-import { memo, useEffect, useMemo } from 'react';
+import { memo, useMemo } from 'react';
 import { Col, Row } from 'react-bootstrap';
 import { ContactCard } from 'src/components/ContactCard';
 import { FilterForm } from 'src/components/FilterForm';
 import { useAppDispatch, useAppSelector } from '../app/redux/hooks';
-import { fetchContacts, setContactsFilter } from '../app/redux/actions/contactsActions';
-import { fetchGroups } from '../app/redux/actions/groupsActions';
+import { useGetContactsQuery } from '../app/redux/contacts';
+import { useGetGroupsQuery } from '../app/redux/groups';
+import { setContactsFilter } from '../app/redux/filters';
 
 export const ContactListPage = memo(() => {
   const dispatch = useAppDispatch();
-  const contacts = useAppSelector(state => state.contacts.items);
-  const groups = useAppSelector(state => state.groups.items);
-  const loading = useAppSelector(state => state.contacts.loading);
-  const groupsLoading = useAppSelector(state => state.groups.loading);
-  const error = useAppSelector(state => state.contacts.error);
-  const filter = useAppSelector(state => state.contacts.filter);
+  const {
+    data: contacts = [],
+    isLoading: contactsLoading,
+    error: contactsError
+  } = useGetContactsQuery();
+  const { data: groups = [], isLoading: groupsLoading, error: groupsError } = useGetGroupsQuery();
+  const filter = useAppSelector(state => state.filters);
+  const loading = contactsLoading || groupsLoading;
+  const error = contactsError || groupsError;
 
   const filteredContacts = useMemo(() => {
     let filtered = contacts;
@@ -38,17 +42,20 @@ export const ContactListPage = memo(() => {
     dispatch(setContactsFilter({ name, groupId }));
   };
 
-  useEffect(() => {
-    dispatch(fetchContacts());
-    dispatch(fetchGroups());
-  }, [dispatch]);
-
-  if (loading || groupsLoading) {
+  if (loading) {
     return <div>Загрузка...</div>;
   }
 
   if (error) {
-    return <div>Ошибка: {error}</div>;
+    return (
+      <div>
+        {typeof error === 'string'
+          ? error
+          : 'message' in error
+          ? error.message
+          : 'Произошла неизвестная ошибка'}
+      </div>
+    );
   }
 
   return (

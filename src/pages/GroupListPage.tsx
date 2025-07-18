@@ -1,17 +1,10 @@
-import { memo, useEffect } from 'react';
+import { memo } from 'react';
 import { Col, Row } from 'react-bootstrap';
 import { GroupContactsCard } from 'src/components/GroupContactsCard';
-import { useAppDispatch, useAppSelector } from '../app/redux/hooks';
-import { fetchGroups } from '../app/redux/actions/groupsActions';
+import { useGetGroupsQuery } from '../app/redux/groups';
 
 export const GroupListPage = memo(() => {
-  const dispatch = useAppDispatch();
-  const groups = useAppSelector(state => state.groups.items);
-  const loading = useAppSelector(state => state.groups.loading);
-
-  useEffect(() => {
-    dispatch(fetchGroups());
-  }, [dispatch]);
+  const { data: groups = [], isLoading: loading } = useGetGroupsQuery();
 
   if (loading) {
     return <div>Загрузка...</div>;

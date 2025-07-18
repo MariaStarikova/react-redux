@@ -1,6 +1,6 @@
 import { ThunkAction } from 'redux-thunk';
 import { GroupContactsDto } from '../../../types/dto/GroupContactsDto';
-import { RootState } from '../store';
+import { RootState } from '../store/store';
 
 export const FETCH_GROUPS_REQUEST = 'FETCH_GROUPS_REQUEST';
 export const FETCH_GROUPS_SUCCESS = 'FETCH_GROUPS_SUCCESS';

@@ -2,8 +2,8 @@ import { FC, useEffect } from 'react';
 import { Col, Row } from 'react-bootstrap';
 import { Navigate, useParams } from 'react-router-dom';
 import { ContactCard } from 'src/components/ContactCard';
-import { useAppDispatch, useAppSelector } from '../apps/redux/hooks';
-import { fetchContacts } from '../apps/redux/actions/contactsActions';
+import { useAppDispatch, useAppSelector } from '../app/redux/hooks';
+import { fetchContacts } from '../app/redux/actions/contactsActions';
 
 export const ContactPage: FC = () => {
   const { contactId } = useParams<{ contactId: string }>();

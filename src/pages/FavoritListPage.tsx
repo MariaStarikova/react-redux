@@ -1,8 +1,8 @@
 import React, { memo, useEffect } from 'react';
 import { Col, Row } from 'react-bootstrap';
 import { ContactCard } from 'src/components/ContactCard';
-import { useAppDispatch, useAppSelector } from '../apps/redux/hooks';
-import { fetchContacts } from '../apps/redux/actions/contactsActions';
+import { useAppDispatch, useAppSelector } from '../app/redux/hooks';
+import { fetchContacts } from '../app/redux/actions/contactsActions';
 
 export const FavoritListPage = memo(() => {
   const dispatch = useAppDispatch();

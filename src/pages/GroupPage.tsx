@@ -3,9 +3,9 @@ import { Col, Row } from 'react-bootstrap';
 import { Navigate, useParams } from 'react-router-dom';
 import { GroupContactsCard } from 'src/components/GroupContactsCard';
 import { ContactCard } from 'src/components/ContactCard';
-import { useAppDispatch, useAppSelector } from '../apps/redux/hooks';
-import { fetchContacts } from '../apps/redux/actions/contactsActions';
-import { fetchGroups } from '../apps/redux/actions/groupsActions';
+import { useAppDispatch, useAppSelector } from '../app/redux/hooks';
+import { fetchContacts } from '../app/redux/actions/contactsActions';
+import { fetchGroups } from '../app/redux/actions/groupsActions';
 
 export const GroupPage = memo(() => {
   const { groupId } = useParams<{ groupId: string }>();

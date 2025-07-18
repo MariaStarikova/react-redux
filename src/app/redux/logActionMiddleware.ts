@@ -1,5 +1,5 @@
 import type { AnyAction, Middleware } from 'redux';
-import { RootState } from './store';
+import { RootState } from './store/store';
 import { logAction } from '../metrics/logAction';
 
 export const logActionMiddleware: Middleware<{}, RootState> = storeAPI => {

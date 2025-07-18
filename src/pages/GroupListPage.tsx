@@ -1,8 +1,8 @@
 import { memo, useEffect } from 'react';
 import { Col, Row } from 'react-bootstrap';
 import { GroupContactsCard } from 'src/components/GroupContactsCard';
-import { useAppDispatch, useAppSelector } from '../apps/redux/hooks';
-import { fetchGroups } from '../apps/redux/actions/groupsActions';
+import { useAppDispatch, useAppSelector } from '../app/redux/hooks';
+import { fetchGroups } from '../app/redux/actions/groupsActions';
 
 export const GroupListPage = memo(() => {
   const dispatch = useAppDispatch();

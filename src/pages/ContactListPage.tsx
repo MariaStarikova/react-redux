@@ -2,9 +2,9 @@ import { memo, useEffect, useMemo } from 'react';
 import { Col, Row } from 'react-bootstrap';
 import { ContactCard } from 'src/components/ContactCard';
 import { FilterForm } from 'src/components/FilterForm';
-import { useAppDispatch, useAppSelector } from '../apps/redux/hooks';
-import { fetchContacts, setContactsFilter } from '../apps/redux/actions/contactsActions';
-import { fetchGroups } from '../apps/redux/actions/groupsActions';
+import { useAppDispatch, useAppSelector } from '../app/redux/hooks';
+import { fetchContacts, setContactsFilter } from '../app/redux/actions/contactsActions';
+import { fetchGroups } from '../app/redux/actions/groupsActions';
 
 export const ContactListPage = memo(() => {
   const dispatch = useAppDispatch();

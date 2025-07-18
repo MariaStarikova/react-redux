@@ -1,12 +1,12 @@
 import { createStore, combineReducers, applyMiddleware } from 'redux';
-import { contactsReducer } from './reducers/contactsReducers';
-import { favoritesReducer } from './reducers/favoritesReducers';
-import { groupsReducer } from './reducers/groupsReducers';
+import { contactsReducer } from './../reducers/contactsReducers';
+import { favoritesReducer } from './../reducers/favoritesReducers';
+import { groupsReducer } from './../reducers/groupsReducers';
 import { thunk, ThunkDispatch } from 'redux-thunk';
-import { ContactsActions } from './actions/contactsActions';
-import { FavoritesActions } from './actions/favoritesActions';
-import { GroupsActions } from './actions/groupsActions';
-import { logActionMiddleware } from './logActionMiddleware';
+import { ContactsActions } from './../actions/contactsActions';
+import { FavoritesActions } from './../actions/favoritesActions';
+import { GroupsActions } from './../actions/groupsActions';
+import { logActionMiddleware } from './../logActionMiddleware';
 import { composeWithDevTools } from '@redux-devtools/extension';
 
 const rootReducer = combineReducers({

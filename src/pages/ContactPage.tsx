@@ -1,22 +1,15 @@
-import { FC, useEffect } from 'react';
+import { FC, useMemo } from 'react';
 import { Col, Row } from 'react-bootstrap';
 import { Navigate, useParams } from 'react-router-dom';
 import { ContactCard } from 'src/components/ContactCard';
-import { useAppDispatch, useAppSelector } from '../apps/redux/hooks';
-import { fetchContacts } from '../apps/redux/actions/contactsActions';
+import { useGetContactsQuery } from '../app/redux/contacts';
 
 export const ContactPage: FC = () => {
   const { contactId } = useParams<{ contactId: string }>();
-  const dispatch = useAppDispatch();
-  const contacts = useAppSelector(state => state.contacts.items);
-  const contactById = (contactId: string | undefined) =>
-    contacts.find(contact => contact.id === contactId);
-  const contact = contactById(contactId);
-  const loading = useAppSelector(state => state.contacts.loading);
-
-  useEffect(() => {
-    dispatch(fetchContacts());
-  }, [dispatch]);
+  const { data: contacts = [], isLoading: loading } = useGetContactsQuery();
+  const contact = useMemo(() => {
+    return contacts.find(contact => contact.id === contactId);
+  }, [contacts, contactId]);
 
   if (loading) {
     return <div>Загрузка...</div>;

@@ -1,19 +1,16 @@
-import React, { memo, useEffect } from 'react';
+import React, { memo, useMemo } from 'react';
 import { Col, Row } from 'react-bootstrap';
 import { ContactCard } from 'src/components/ContactCard';
-import { useAppDispatch, useAppSelector } from '../apps/redux/hooks';
-import { fetchContacts } from '../apps/redux/actions/contactsActions';
+import { useAppSelector } from '../app/redux/hooks';
+import { useGetContactsQuery } from '../app/redux/contacts';
 
 export const FavoritListPage = memo(() => {
-  const dispatch = useAppDispatch();
-  const allContacts = useAppSelector(state => state.contacts.items);
+  const { data: allContacts = [], isLoading: loading } = useGetContactsQuery();
   const favoriteContactIds = useAppSelector(state => state.favorites.contactIds);
-  const favoriteContacts = allContacts.filter(contact => favoriteContactIds.includes(contact.id));
-  const loading = useAppSelector(state => state.contacts.loading);
 
-  useEffect(() => {
-    dispatch(fetchContacts());
-  }, [dispatch]);
+  const favoriteContacts = useMemo(() => {
+    return allContacts.filter(contact => favoriteContactIds.includes(contact.id));
+  }, [allContacts, favoriteContactIds]);
 
   if (loading) {
     return <div>Загрузка...</div>;

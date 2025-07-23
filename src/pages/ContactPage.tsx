@@ -1,15 +1,20 @@
-import { FC, useMemo } from 'react';
+import { FC, useEffect, useMemo } from 'react';
 import { Col, Row } from 'react-bootstrap';
+import { observer } from 'mobx-react-lite';
 import { Navigate, useParams } from 'react-router-dom';
 import { ContactCard } from 'src/components/ContactCard';
-import { useGetContactsQuery } from '../app/redux/contacts';
+import { contactsStore } from '../app/store/contactsStore';
 
-export const ContactPage: FC = () => {
+export const ContactPage: FC = observer(() => {
   const { contactId } = useParams<{ contactId: string }>();
-  const { data: contacts = [], isLoading: loading } = useGetContactsQuery();
+  const { contacts, loading } = contactsStore;
   const contact = useMemo(() => {
     return contacts.find(contact => contact.id === contactId);
   }, [contacts, contactId]);
+
+  useEffect(() => {
+    contactsStore.get();
+  }, []);
 
   if (loading) {
     return <div>Загрузка...</div>;
@@ -26,4 +31,4 @@ export const ContactPage: FC = () => {
       </Col>
     </Row>
   );
-};
+});

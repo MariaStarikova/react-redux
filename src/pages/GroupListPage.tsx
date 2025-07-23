@@ -1,10 +1,15 @@
-import { memo } from 'react';
+import { useEffect } from 'react';
 import { Col, Row } from 'react-bootstrap';
+import { observer } from 'mobx-react-lite';
 import { GroupContactsCard } from 'src/components/GroupContactsCard';
-import { useGetGroupsQuery } from '../app/redux/groups';
+import { groupsStore } from '../app/store/groupsStore';
 
-export const GroupListPage = memo(() => {
-  const { data: groups = [], isLoading: loading } = useGetGroupsQuery();
+export const GroupListPage = observer(() => {
+  const { groups, loading } = groupsStore;
+
+  useEffect(() => {
+    groupsStore.get();
+  }, []);
 
   if (loading) {
     return <div>Загрузка...</div>;

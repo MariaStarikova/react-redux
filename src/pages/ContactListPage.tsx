@@ -1,61 +1,53 @@
-import { memo, useMemo } from 'react';
+import { useEffect, useMemo } from 'react';
 import { Col, Row } from 'react-bootstrap';
+import { observer } from 'mobx-react-lite';
 import { ContactCard } from 'src/components/ContactCard';
 import { FilterForm } from 'src/components/FilterForm';
-import { useAppDispatch, useAppSelector } from '../app/redux/hooks';
-import { useGetContactsQuery } from '../app/redux/contacts';
-import { useGetGroupsQuery } from '../app/redux/groups';
-import { setContactsFilter } from '../app/redux/filters';
+import { contactsStore } from '../app/store/contactsStore';
+import { groupsStore } from '../app/store/groupsStore';
+import { filtersStore } from '../app/store/filtersStore';
 
-export const ContactListPage = memo(() => {
-  const dispatch = useAppDispatch();
-  const {
-    data: contacts = [],
-    isLoading: contactsLoading,
-    error: contactsError
-  } = useGetContactsQuery();
-  const { data: groups = [], isLoading: groupsLoading, error: groupsError } = useGetGroupsQuery();
-  const filter = useAppSelector(state => state.filters);
+export const ContactListPage = observer(() => {
+  const { contacts, loading: contactsLoading, error: contactsError } = contactsStore;
+  const { groups, loading: groupsLoading, error: groupsError } = groupsStore;
+  const { name, groupId } = filtersStore;
   const loading = contactsLoading || groupsLoading;
   const error = contactsError || groupsError;
 
   const filteredContacts = useMemo(() => {
     let filtered = contacts;
 
-    if (filter.name && filter.name.trim()) {
+    if (name && name.trim()) {
       filtered = filtered.filter(contact =>
-        contact.name.toLowerCase().includes(filter.name.toLowerCase())
+        contact.name.toLowerCase().includes(name.toLowerCase())
       );
     }
 
-    if (filter.groupId && filter.groupId.trim()) {
-      const selectedGroup = groups.find(group => group.id === filter.groupId);
+    if (groupId && groupId.trim()) {
+      const selectedGroup = groups.find(group => group.id === groupId);
       if (selectedGroup) {
         filtered = filtered.filter(contact => selectedGroup.contactIds.includes(contact.id));
       }
     }
 
     return filtered;
-  }, [contacts, filter.name, filter.groupId, groups]);
+  }, [contacts, name, groupId, groups]);
 
   const handleFilter = (name: string, groupId: string) => {
-    dispatch(setContactsFilter({ name, groupId }));
+    filtersStore.setContactsFilter({ name, groupId });
   };
+
+  useEffect(() => {
+    contactsStore.get();
+    groupsStore.get();
+  }, []);
 
   if (loading) {
     return <div>Загрузка...</div>;
   }
 
   if (error) {
-    return (
-      <div>
-        {typeof error === 'string'
-          ? error
-          : 'message' in error
-          ? error.message
-          : 'Произошла неизвестная ошибка'}
-      </div>
-    );
+    return <div>{typeof error === 'string' ? error : 'Произошла неизвестная ошибка'}</div>;
   }
 
   return (
@@ -64,8 +56,8 @@ export const ContactListPage = memo(() => {
         <FilterForm
           groups={groups}
           onFilter={handleFilter}
-          initialName={filter.name}
-          initialGroupId={filter.groupId}
+          initialName={name}
+          initialGroupId={groupId}
         />
       </Col>
       <Col>
@@ -81,8 +73,8 @@ export const ContactListPage = memo(() => {
             <h4>Контакты не найдены</h4>
             <p>Попробуйте изменить параметры поиска</p>
             <p>Активные фильтры:</p>
-            {filter.name && <p>Имя: "{filter.name}"</p>}
-            {filter.groupId && <p>Группа: "{groups.find(g => g.id === filter.groupId)?.name}"</p>}
+            {name && <p>Имя: "{name}"</p>}
+            {groupId && <p>Группа: "{groups.find(g => g.id === groupId)?.name}"</p>}
           </div>
         )}
       </Col>
